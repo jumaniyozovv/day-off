@@ -19,7 +19,7 @@ const Header = () => {
             }`
           }
         >
-          📝 Request Leave
+       Request Leave
         </NavLink>
 
         <NavLink
@@ -30,7 +30,7 @@ const Header = () => {
             }`
           }
         >
-          📋 Leave List
+       Leave List
         </NavLink>
       </nav>
     </header>

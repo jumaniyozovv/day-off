@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect } from "react";
 
 // Context yaratamiz
 export const LeaveContext = createContext();
@@ -22,13 +22,10 @@ export const LeaveProvider = ({ children }) => {
     setLeaves((prev) => [...prev, newLeave]);
   };
 
-  // leave o‘chirish
-  const deleteLeave = (id) => {
-    setLeaves((prev) => prev.filter((leave) => leave.id !== id));
-  };
+
 
   return (
-    <LeaveContext.Provider value={{ leaves, addLeave, deleteLeave }}>
+    <LeaveContext.Provider value={{ leaves, addLeave }}>
       {children}
     </LeaveContext.Provider>
   );

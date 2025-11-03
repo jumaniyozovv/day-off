@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import  { useContext, useState } from "react";
 import { LeaveContext } from "../context/LeaveContext";
 
 const LeaveList = () => {
@@ -19,7 +19,7 @@ const LeaveList = () => {
     <div className="p-6 bg-gray-50 h-[90vh]">
       <div className=" shadow-md rounded-2xl p-6">
         <h2 className="text-2xl font-semibold text-gray-800 mb-4 text-center">
-          🗂 Leave Requests
+           Leave Requests
         </h2>
 
         {/* 🔹 Filter controls */}

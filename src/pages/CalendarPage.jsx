@@ -29,8 +29,8 @@ const CalendarPage = () => {
   return (
     <div className="min-h-[80vh] w-full flex items-center justify-center bg-gray-50 px-6">
       <div className="bg-white shadow-lg rounded-2xl p-6 w-full mx-auto">
-        <h1 className="text-2xl font-bold text-gray-700 mb-6 text-center">
-          📅 Month Overview
+        <h1 className="text-2xl font-bold text-gray-700 mb-6 ">
+          Month Overview
         </h1>
 
         <FullCalendar

@@ -1,100 +1,123 @@
-import  { useState, useContext } from "react";
-import { LeaveContext } from "../context/LeaveContext";
+import React from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import { useContext } from "react";
+import { LeaveContext } from "../context/LeaveContext";
 
 const LeaveForm = () => {
   const { addLeave } = useContext(LeaveContext);
 
-  const [formData, setFormData] = useState({
-    startDate: "",
-    endDate: "",
-    type: "",
-    reason: "",
-  });
+  const {
+    register,
+    handleSubmit,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm();
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const onSubmit = (data) => {
+    const startDate = new Date(data.startDate);
+    const endDate = new Date(data.endDate);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const { startDate, endDate, type } = formData;
-    if (!startDate || !endDate || !type) {
-      toast.error("Please fill all required fields!");
-      return;
-    }
-
-    if (new Date(endDate) < new Date(startDate)) {
-      toast.error("End date cannot be earlier than start date!");
+    if (endDate < startDate) {
+      toast.error("❌ End date cannot be earlier than start date!");
       return;
     }
 
     const newLeave = {
-      id: Date.now(),
-      ...formData,
+      ...data,
       status: "Pending",
     };
 
     addLeave(newLeave);
-    toast.success("Leave request submitted!");
-    setFormData({ startDate: "", endDate: "", type: "", reason: "" });
+    toast.success("✅ Leave request submitted successfully!");
+    reset();
   };
 
   return (
-    <div className="w-full h-[80vh] flex items-center justify-center px-6">
+    <div className="min-h-[80vh] flex items-center justify-center bg-gray-100">
       <form
-        onSubmit={handleSubmit}
-        className="w-[400px] p-6 bg-white border shadow-md rounded-xl"
+        onSubmit={handleSubmit(onSubmit)}
+        className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md"
       >
-        <h2 className="text-2xl font-bold  text-center">
-          Request a Day-Off
+        <h2 className="text-2xl font-bold text-gray-700 mb-4 text-center">
+           Leave Request Form
         </h2>
 
-        <div className="flex flex-col gap-4">
-          <input
-            type="date"
-            name="startDate"
-            value={formData.startDate}
-            onChange={handleChange}
-            className="border outline-none p-2 rounded-md"
-          />
-          <input
-            type="date"
-            name="endDate"
-            value={formData.endDate}
-            onChange={handleChange}
-            className="border outline-none p-2 rounded-md"
-          />
-
+        {/* Leave Type */}
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium mb-1">
+            Leave Type
+          </label>
           <select
-            name="type"
-            value={formData.type}
-            onChange={handleChange}
-            className="border outline-none p-2 rounded-md"
+            {...register("type", { required: "Please select leave type" })}
+            className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400"
           >
-            <option value="">Select Type</option>
+            <option value="">-- Select Type --</option>
             <option value="Vacation">Vacation</option>
             <option value="Sick Leave">Sick Leave</option>
-            <option value="Unpaid Leave">Unpaid Leave</option>
             <option value="Paid Leave">Paid Leave</option>
+            <option value="Unpaid Leave">Unpaid Leave</option>
           </select>
-
-          <textarea
-            name="reason"
-            placeholder="Reason (optional)"
-            value={formData.reason}
-            onChange={handleChange}
-            className="border outline-none p-2 rounded-md"
-          />
-
-          <button
-            type="submit"
-            className="bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
-          >
-            Submit
-          </button>
+          {errors.type && (
+            <p className="text-red-500 text-sm mt-1">{errors.type.message}</p>
+          )}
         </div>
+
+        {/* Start Date */}
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium mb-1">
+            Start Date
+          </label>
+          <input
+            type="date"
+            {...register("startDate", { required: "Start date is required" })}
+            className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400"
+          />
+          {errors.startDate && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.startDate.message}
+            </p>
+          )}
+        </div>
+
+        {/* End Date */}
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium mb-1">
+            End Date
+          </label>
+          <input
+            type="date"
+            {...register("endDate", { required: "End date is required" })}
+            className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400"
+          />
+          {errors.endDate && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.endDate.message}
+            </p>
+          )}
+        </div>
+
+        {/* Reason */}
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium mb-1">
+            Reason (optional)
+          </label>
+          <textarea
+            {...register("reason")}
+            placeholder="Write your reason..."
+            className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400"
+            rows="3"
+          ></textarea>
+        </div>
+
+        {/* Submit */}
+        <button
+          type="submit"
+          className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
+        >
+          Submit Request
+        </button>
       </form>
     </div>
   );
